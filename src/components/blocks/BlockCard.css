@@ -1,0 +1,102 @@
+/* src/components/blocks/BlockCard.css */
+
+/* 타이틀 row */
+.block-title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.block-title-text {
+  flex: 1;
+  min-width: 0;
+}
+
+/* preview label row */
+.preview-label-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.preview-label-text {
+  flex: 1;
+}
+
+/* link handle: 항상 표시 */
+.link-handle {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.link-handle:hover {
+  background: #ffd700;
+  color: #000;
+}
+
+.link-handle svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+}
+
+/* 연결 소스 */
+.link-handle.active {
+  background: #ffd700;
+  color: #000;
+}
+
+/* 연결 모드에서 "선택 가능" 하이라이트 */
+.link-handle.selectable {
+  outline: 2px solid rgba(255, 215, 0, 0.9);
+  outline-offset: 1px;
+}
+
+/* 연결 모드에서 "선택 불가" 약화 */
+.link-handle.dim {
+  opacity: 0.25;
+}
+
+/* 카드 단위 하이라이트 (선택 가능한 타겟 카드) */
+.canvas-block.connect-target {
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.75), 2px 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* ====== (호환) block-card 기반 하이라이트 ====== */
+.block-card.link-source {
+  outline: 2px solid #ffd700;
+  outline-offset: 2px;
+}
+
+.block-card.link-target-selectable {
+  outline: 2px solid rgba(255, 215, 0, 0.9);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.35);
+}
+
+.block-card.link-dim {
+  opacity: 0.25;
+}
+
+/* ====== (호환) link 버튼 기반 하이라이트 ====== */
+.link-btn.active {
+  background: #ffd700;
+  color: #000;
+}
+
+.link-btn.selectable {
+  outline: 2px solid rgba(255, 215, 0, 0.9);
+  outline-offset: 1px;
+}
+
+.link-btn.dim {
+  opacity: 0.25;
+}
