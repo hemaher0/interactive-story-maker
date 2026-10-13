@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1380" height="420" viewBox="0 0 1380 420" role="img" aria-labelledby="title desc">
+<title id="title">이야기 요소 생성과 장면 시각화의 두 경로</title>
+<desc id="desc">설명과 타입으로 Gemini JSON 요소를 만들어 기본 데이터와 함께 Assets에 보관하고 사용자가 캔버스에 배치한다. 시각화 버튼은 캔버스를 snapshot, SceneSpec, 이미지 프롬프트로 변환한 뒤 이미지 생성을 요청해 Scene에 표시한다.</desc>
+<defs><marker id="arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7Z" fill="#7b8793"/></marker></defs>
+<rect width="1380" height="420" rx="14" fill="#f6f8fa"/>
+<text x="30" y="39" font-family="Noto Sans CJK KR,Apple SD Gothic Neo,Malgun Gothic,sans-serif" font-size="24" font-weight="700" fill="#24292f">1. 이야기 요소 생성과 편집</text>
+<rect x="30" y="64" width="265" height="82" rx="8" fill="#fff" stroke="#c9d3dd"/>
+<text x="45" y="97" font-family="Noto Sans CJK KR,Apple SD Gothic Neo,Malgun Gothic,sans-serif" font-size="21" font-weight="700" fill="#24292f">타입 + 자연어 설명</text>
+<text x="45" y="125" font-family="Noto Sans CJK KR,Apple SD Gothic Neo,Malgun Gothic,sans-serif" font-size="16" font-weight="400" fill="#24292f">생성 창 입력</text>
+<rect x="350" y="64" width="265" height="82" rx="8" fill="#f2ecff" stroke="#ae95d5"/>
+<text x="365" y="97" font-family="Noto Sans CJK KR,Apple SD Gothic Neo,Malgun Gothic,sans-serif" font-size="21" font-weight="700" fill="#563b86">요소 생성</text>
+<text x="365" y="125" font-family="Noto Sans CJK KR,Apple SD Gothic Neo,Malgun Gothic,sans-serif" font-size="16" font-weight="400" fill="#563b86">Gemini · JSON 응답</text>
+<rect x="670" y="64" width="285" height="82" rx="8" fill="#fff" stroke="#c9d3dd"/>
+<text x="685" y="97" font-family="Noto Sans CJK KR,Apple SD Gothic Neo,Malgun Gothic,sans-serif" font-size="21" font-weight="700" fill="#24292f">Assets</text>
+<text x="685" y="125" font-family="Noto Sans CJK KR,Apple SD Gothic Neo,Malgun Gothic,sans-serif" font-size="16" font-weight="400" fill="#24292f">기본 예시 + 생성한 요소</text>
+<rect x="1010" y="64" width="335" height="82" rx="8" fill="#fff" stroke="#c9d3dd"/>
+<text x="1025" y="97" font-family="Noto Sans CJK KR,Apple SD Gothic Neo,Malgun Gothic,sans-serif" font-size="21" font-weight="700" fill="#24292f">Block Canvas</text>
+<text x="1025" y="125" font-family="Noto Sans CJK KR,Apple SD Gothic Neo,Malgun Gothic,sans-serif" font-size="16" font-weight="400" fill="#24292f">직접 배치 · 연결 · 규칙 편집</text>
+<path d="M295 105L344 105" fill="none" stroke="#7b8793" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M615 105L664 105" fill="none" stroke="#7b8793" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M955 105L1004 105" fill="none" stroke="#7b8793" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="965" y="169" font-family="Noto Sans CJK KR,Apple SD Gothic Neo,Malgun Gothic,sans-serif" font-size="15" font-weight="400" fill="#57606a">끌어놓기</text>
+<path d="M30 190H1345" stroke="#dde3e9"/>
+<text x="30" y="228" font-family="Noto Sans CJK KR,Apple SD Gothic Neo,Malgun Gothic,sans-serif" font-size="24" font-weight="700" fill="#24292f">2. Visualize Scene: 현재 캔버스를 장면 이미지로</text>
+<rect x="30" y="256" width="205" height="82" rx="8" fill="#fff" stroke="#c9d3dd"/>
+<text x="45" y="289" font-family="Noto Sans CJK KR,Apple SD Gothic Neo,Malgun Gothic,sans-serif" font-size="21" font-weight="700" fill="#24292f">현재 캔버스</text>
+<text x="45" y="317" font-family="Noto Sans CJK KR,Apple SD Gothic Neo,Malgun Gothic,sans-serif" font-size="16" font-weight="400" fill="#24292f">블록 · 연결 정보</text>
+<path d="M235 297L246 297" fill="none" stroke="#7b8793" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="252" y="256" width="205" height="82" rx="8" fill="#fff" stroke="#c9d3dd"/>
+<text x="267" y="289" font-family="Noto Sans CJK KR,Apple SD Gothic Neo,Malgun Gothic,sans-serif" font-size="21" font-weight="700" fill="#24292f">snapshot</text>
+<text x="267" y="317" font-family="Noto Sans CJK KR,Apple SD Gothic Neo,Malgun Gothic,sans-serif" font-size="16" font-weight="400" fill="#24292f">편집 데이터 직렬화</text>
+<path d="M457 297L468 297" fill="none" stroke="#7b8793" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="474" y="256" width="205" height="82" rx="8" fill="#fff" stroke="#c9d3dd"/>
+<text x="489" y="289" font-family="Noto Sans CJK KR,Apple SD Gothic Neo,Malgun Gothic,sans-serif" font-size="21" font-weight="700" fill="#24292f">SceneSpec</text>
+<text x="489" y="317" font-family="Noto Sans CJK KR,Apple SD Gothic Neo,Malgun Gothic,sans-serif" font-size="16" font-weight="400" fill="#24292f">인물 · 상태 · 행동</text>
+<path d="M679 297L690 297" fill="none" stroke="#7b8793" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="696" y="256" width="205" height="82" rx="8" fill="#f2ecff" stroke="#ae95d5"/>
+<text x="711" y="289" font-family="Noto Sans CJK KR,Apple SD Gothic Neo,Malgun Gothic,sans-serif" font-size="21" font-weight="700" fill="#563b86">프롬프트</text>
+<text x="711" y="317" font-family="Noto Sans CJK KR,Apple SD Gothic Neo,Malgun Gothic,sans-serif" font-size="16" font-weight="400" fill="#563b86">Gemini 텍스트 생성</text>
+<path d="M901 297L912 297" fill="none" stroke="#7b8793" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="918" y="256" width="205" height="82" rx="8" fill="#f2ecff" stroke="#ae95d5"/>
+<text x="933" y="289" font-family="Noto Sans CJK KR,Apple SD Gothic Neo,Malgun Gothic,sans-serif" font-size="21" font-weight="700" fill="#563b86">장면 이미지</text>
+<text x="933" y="317" font-family="Noto Sans CJK KR,Apple SD Gothic Neo,Malgun Gothic,sans-serif" font-size="16" font-weight="400" fill="#563b86">Gemini 이미지 생성</text>
+<path d="M1123 297L1134 297" fill="none" stroke="#7b8793" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1140" y="256" width="205" height="82" rx="8" fill="#fff" stroke="#c9d3dd"/>
+<text x="1155" y="289" font-family="Noto Sans CJK KR,Apple SD Gothic Neo,Malgun Gothic,sans-serif" font-size="21" font-weight="700" fill="#24292f">Scene</text>
+<text x="1155" y="317" font-family="Noto Sans CJK KR,Apple SD Gothic Neo,Malgun Gothic,sans-serif" font-size="16" font-weight="400" fill="#24292f">응답 이미지 표시</text>
+<text x="30" y="384" font-family="Noto Sans CJK KR,Apple SD Gothic Neo,Malgun Gothic,sans-serif" font-size="17" font-weight="400" fill="#57606a">흰색: 브라우저의 데이터·화면 처리     보라색: 외부 Gemini API 호출</text>
+</svg>
