@@ -1,195 +1,195 @@
 # Interactive Story Maker
 
-### 이야기를 구성하고, 규칙을 연결하고, 장면을 그림으로 확인하는 창작·코딩 도구
+### A creative coding tool for building stories, connecting rules, and visualizing scenes
 
-Interactive Story Maker는 어린이가 등장인물과 사건을 만들면서 **상태, 조건, 행동, 결과의 관계**를 표현하도록 설계한 웹 도구입니다. 인물의 특징은 문장으로 입력하고, 누가 무엇을 하며 그 뒤에 무엇이 바뀌어야 하는지는 블록에서 구성합니다. 만들어진 이야기의 맥락은 AI가 생성한 장면 이미지로 확인할 수 있습니다.
+Interactive Story Maker is a web tool designed to help children express **relationships between states, conditions, actions, and outcomes** as they create characters and events. Users describe a character's traits in natural language, then use blocks to define who does what and what should change as a result. AI-generated scene images help them see the context of the story they have built.
 
-**GIST Intelligent Agent 수업 기말 프로젝트 · 개인 프로젝트**  
+**Final project for GIST's Intelligent Agent course · Individual project**  
 React · JavaScript · SVG · Gemini API
 
-## 목차
+## Contents
 
-- [주요 기능과 사용 흐름](#주요-기능과-사용-흐름)
-- [이야기를 표현하는 데이터 모델](#이야기를-표현하는-데이터-모델)
-- [시스템 구조](#시스템-구조)
-- [기술 선택과 구현](#기술-선택과-구현)
-- [구현 내용](#구현-내용)
-- [개발 환경과 실행](#개발-환경과-실행)
-- [코드 구조](#코드-구조)
+- [Features and Workflow](#features-and-workflow)
+- [Story Data Model](#story-data-model)
+- [System Architecture](#system-architecture)
+- [Technical Decisions and Implementation](#technical-decisions-and-implementation)
+- [Implemented Features](#implemented-features)
+- [Development Setup](#development-setup)
+- [Code Structure](#code-structure)
 
-## 주요 기능과 사용 흐름
+## Features and Workflow
 
-화면은 **Scene**, **Assets**, **Block Canvas**의 세 영역으로 구성됩니다. Scene에서 그림을 보고, Assets에서 이야기 요소를 관리하며, Block Canvas에서 요소 사이의 관계를 연결합니다.
+The interface has three areas: **Scene**, **Assets**, and **Block Canvas**. Scene displays the image, Assets holds the story elements, and Block Canvas lets users connect relationships between those elements.
 
 <table>
   <tr>
-    <th width="33%">1. 장면과 규칙 구성</th>
-    <th width="33%">2. 추가할 요소 입력</th>
-    <th width="33%">3. 블록과 장면 확인</th>
+    <th width="33%">1. Build a Scene and Its Rules</th>
+    <th width="33%">2. Describe a New Element</th>
+    <th width="33%">3. Review the Blocks and Scene</th>
   </tr>
   <tr>
-    <td><a href="assets/img/01-scene-rules.png"><img src="assets/img/01-scene-rules.png" alt="백설공주와 곰의 상태 및 선물하기 규칙을 연결한 화면" width="100%"></a></td>
-    <td><a href="assets/img/02-natural-language-input.png"><img src="assets/img/02-natural-language-input.png" alt="공주와 곰에게 다가오는 토끼를 문장으로 입력하는 화면" width="100%"></a></td>
-    <td><a href="assets/img/03-rabbit-scene.png"><img src="assets/img/03-rabbit-scene.png" alt="토끼의 상태와 접근 규칙, 토끼가 포함된 장면을 확인하는 화면" width="100%"></a></td>
+    <td><a href="assets/img/01-scene-rules.png"><img src="assets/img/01-scene-rules.png" alt="Snow White and the bear connected to their states and a Give Gift action" width="100%"></a></td>
+    <td><a href="assets/img/02-natural-language-input.png"><img src="assets/img/02-natural-language-input.png" alt="A natural-language description of a rabbit approaching Snow White and the bear" width="100%"></a></td>
+    <td><a href="assets/img/03-rabbit-scene.png"><img src="assets/img/03-rabbit-scene.png" alt="The rabbit's states and approach rule alongside a scene that includes the rabbit" width="100%"></a></td>
   </tr>
   <tr>
-    <td>인물·상태·행동의 관계 연결</td>
-    <td>새 인물과 행동을 문장으로 설명</td>
-    <td>추가된 규칙과 시각화된 장면 확인</td>
+    <td>Connect characters, states, and actions</td>
+    <td>Describe a new character and its behavior</td>
+    <td>Review the added rules and visualized scene</td>
   </tr>
 </table>
 
-세 화면은 자연어 입력부터 블록 구성과 장면 확인까지의 흐름을 보여주는 UI 목업입니다. 이미지를 누르면 원본 크기로 볼 수 있습니다.
+These UI mockups illustrate the flow from natural-language input to block editing and scene review. Click an image to view it at full size.
 
-### 1. 인물과 행동의 관계를 블록으로 구성
+### 1. Connect Characters and Actions with Blocks
 
-첫 화면은 백설공주가 곰에게 사과를 선물하는 장면입니다. 백설공주의 `사과 소지`, 곰의 `관계`를 상태로 두고, `선물하기`에 행동의 주체와 대상을 지정합니다. 조건에는 사과를 가지고 있는지, 결과에는 사과 소지와 곰의 관계를 어떻게 바꿀지를 작성합니다.
+The first screen shows Snow White giving an apple to a bear. Snow White's `Has Apple` and the bear's `Relationship` are represented as states, while `Give Gift` specifies the action's actor and target. The conditions describe whether Snow White has an apple; the effects describe how apple possession and the bear's relationship should change.
 
-- Assets에서 Object·State·Action·Condition 등의 요소를 찾아 캔버스로 끌어 놓습니다.
-- 인물과 상태의 소유 관계, 행동의 주체·대상, 행동에 필요한 조건을 포트로 연결합니다.
-- 블록의 위치를 바꾸거나 캔버스를 이동하면서 관계를 살펴보고, 편집창에서 속성과 행동 규칙을 수정합니다.
+- Drag elements such as Object, State, Action, and Condition from Assets onto the canvas.
+- Use ports to connect characters to the states they own, assign actors and targets, and attach conditions to actions.
+- Move blocks or pan the canvas to inspect relationships, then edit properties and action rules in the editor.
 
-### 2. 문장으로 이야기 요소를 추가
+### 2. Add Story Elements with Natural Language
 
-인물이나 사물의 특징을 문장으로 설명해 이야기 요소의 초안을 만들 수 있습니다. 생성 창에서 Object·State·Action·Condition·Goal 중 타입을 선택하고 설명을 입력합니다. Object를 요청하면 해당 Object와 초기 State를 묶어 받아 Assets에 추가합니다.
+Users can draft a story element by describing a character or object in natural language. In the generation dialog, they select a type from Object, State, Action, Condition, or Goal and enter a description. An Object request returns a bundle containing the Object and its initial States, which are added to Assets.
 
-토끼를 추가하는 화면 예시는 공주와 곰에게 호기심을 느끼며 다가오는 상황을 인물·상태·행동·조건으로 나누어 보여줍니다.
+The rabbit example breaks a situation into a character, states, an action, and a condition: a curious rabbit approaches Snow White and the bear.
 
-### 3. 추가된 규칙과 장면을 함께 확인
+### 3. Review the Added Rules and Scene Together
 
-마지막 화면에는 토끼의 `기분`과 `위치`, `공주와 곰에게 다가가기` 행동이 배치됩니다. `기분 = 호기심`을 조건으로 두고, 결과에는 토끼의 위치를 공주와 곰 곁으로 바꾸는 규칙을 표현합니다. 왼쪽 Scene에서는 토끼가 포함된 그림을 함께 볼 수 있습니다.
+The final screen contains the rabbit's `Mood` and `Location` states and an `Approach Snow White and the Bear` action. The condition is `Mood = Curious`, and the effect expresses a rule that changes the rabbit's location to beside Snow White and the bear. The Scene panel on the left shows an image that includes the rabbit.
 
-장면 시각화는 **Visualize Scene** 버튼으로 요청합니다. 현재 캔버스의 내용을 장면 명세로 정리하고, 이를 이미지 생성과 연결합니다. 규칙을 수정한 뒤 다시 요청하면 그때 구성한 내용을 새로운 이미지 요청에 사용할 수 있습니다.
+Scene visualization is requested with the **Visualize Scene** button. The current canvas is summarized as a scene specification and passed into the image-generation flow. After editing a rule, users can request another image based on the updated canvas.
 
-## 이야기를 표현하는 데이터 모델
+## Story Data Model
 
-등장인물과 행동을 구분하고, 사용자가 조건과 결과를 덧붙일 수 있도록 이야기 요소를 나눴습니다. “곰에게 사과를 준다”는 행동에 “사과를 가지고 있어야 한다”는 조건과 “곰과 친구가 된다”는 결과를 추가하는 방식입니다.
+The model separates characters from actions so users can add conditions and effects. For example, “give the bear an apple” can have the condition “must have an apple” and the intended outcome “become friends with the bear.”
 
-| 요소 | 표현하는 내용 | 선물하기 장면의 예 |
+| Element | What It Represents | Gift-Giving Example |
 | --- | --- | --- |
-| **Object** | 인물·사물·장소. 자신의 상태를 참조 | 백설공주, 곰, 사과, 깊은 숲 |
-| **State** | 속성의 정의와 가능한 값. 대상에 연결된 현재 값 | 사과 소지: true/false, 관계: 경계함/친구 |
-| **Action** | 주체(Actor)와 대상(Target), 조건과 결과를 가진 행동 | 백설공주가 곰에게 선물하기 |
-| **Condition** | 상태나 값을 비교하는 식 | 백설공주의 사과 소지 = true |
-| **Effect** | 행동의 결과로 의도한 상태 대입 | 사과 소지 = false, 곰의 관계 = 친구 |
-| **Goal** | 이야기의 목표 조건과 엔딩 설명 | 곰과 친구되기 |
+| **Object** | A character, item, or place, with references to its states | Snow White, bear, apple, deep forest |
+| **State** | A property definition and its possible values, or a current value associated with an object | Has Apple: true/false; Relationship: Wary/Friend |
+| **Action** | An action with an Actor, a Target, conditions, and effects | Snow White gives a gift to the bear |
+| **Condition** | An expression that compares states or values | Snow White's Has Apple = true |
+| **Effect** | An intended state assignment resulting from an action | Has Apple = false; the bear's Relationship = Friend |
+| **Goal** | A target condition and an ending description | Become friends with the bear |
 
-State의 값은 문자열만으로 다루지 않고, Boolean·리터럴·Object 참조 등을 구분합니다. 예를 들어 `사과 소지`는 Boolean 값이고, `위치`는 장소 Object를 가리킬 수 있습니다. Condition은 상태와 상수를 비교하거나 서로 다른 대상의 상태를 비교하도록 표현합니다.
+State values distinguish Booleans, literals, Object references, and other value types. For example, `Has Apple` is a Boolean, while `Location` can refer to a place Object. Conditions can compare a state with a constant or compare states belonging to different objects.
 
-### 예시: 선물하기 규칙
+### Example: A Gift-Giving Rule
 
-백설공주와 곰에 위치 상태를 지정하고, 기본 데이터의 `선물하기`에 백설공주를 Actor, 곰을 Target으로 연결한 예시입니다.
+In this example, Snow White and the bear each have a Location state. The `Give Gift` action from the built-in data uses Snow White as its Actor and the bear as its Target.
 
-| 구분 | 규칙 |
+| Part | Rule |
 | --- | --- |
-| 주체와 대상 | Actor = 백설공주, Target = 곰 |
-| 조건 1 | Actor와 Target의 위치가 같다 |
-| 조건 2 | Actor의 사과 소지가 true다 |
-| 결과 1 | Actor의 사과 소지를 false로 설정 |
-| 결과 2 | Target의 관계를 친구로 설정 |
+| Actor and Target | Actor = Snow White; Target = bear |
+| Condition 1 | Actor and Target have the same Location |
+| Condition 2 | Actor's Has Apple is true |
+| Effect 1 | Set Actor's Has Apple to false |
+| Effect 2 | Set Target's Relationship to Friend |
 
-여기서 Condition은 **어떤 상태를 검사할지**, Effect는 **어떤 상태를 어떤 값으로 바꿀지**를 담습니다. Effect는 Action 내부에 저장하는 상태 대입 규칙입니다. Condition을 행동에 연결하고, Action 편집창에서 조건과 결과를 확인·수정하는 방식으로 다룹니다.
+A Condition describes **which state to check**, while an Effect describes **which state to assign and what value to use**. Effects are state-assignment rules stored within an Action. Users connect Conditions to actions, then review and edit the conditions and effects in the Action editor.
 
-관련 코드: [기본 이야기 데이터](src/data/initialData.js), [요소 편집창](src/components/ComponentEditor.js)
+Related code: [Built-in story data](src/data/initialData.js), [Element editor](src/components/ComponentEditor.js)
 
-## 시스템 구조
+## System Architecture
 
-![입력, 이야기 요소 생성, 블록 편집, 장면 명세, 이미지 생성의 처리 구조](assets/img/story-pipeline.svg)
+![The two processing paths: story element generation and editing, and scene specification and image generation](assets/img/story-pipeline.svg)
 
-앱은 React 클라이언트와 Gemini API 호출로 구성됩니다. 이야기 요소를 만드는 경로와, 편집한 내용을 이미지로 만드는 경로를 나누어 연결했습니다. 기본 예시 데이터는 앱에 포함돼 있어, 요소 생성 요청 없이도 Assets에서 블록을 가져와 규칙을 구성할 수 있습니다.
+The app consists of a React client that calls the Gemini API. It has separate paths for generating story elements and visualizing edited content. Built-in example data lets users drag blocks from Assets and construct rules without first requesting new elements.
 
-### 이야기 요소 생성 경로
+### Story Element Generation
 
-1. 생성 창에서 **요소 타입과 설명**을 입력합니다.
-2. `generateGameElement()`가 타입별 JSON 형식을 포함한 요청을 Gemini에 전달합니다.
-3. 응답을 파싱하고, 단일 요소 또는 Object·초기 State 묶음으로 처리합니다.
-4. 결과를 Assets에 추가합니다. 사용자는 필요한 요소를 캔버스로 끌어 놓고 편집합니다.
+1. Enter an **element type and description** in the generation dialog.
+2. `generateGameElement()` sends Gemini a request that includes the JSON format for the selected type.
+3. Parse the response as either a single element or a bundle containing an Object and its initial States.
+4. Add the result to Assets, where users can drag the elements they need onto the canvas and edit them.
 
-### 장면 시각화 경로
+### Scene Visualization
 
-1. `exportCanvasSnapshot()`이 현재 블록과 연결 정보를 snapshot으로 만듭니다.
-2. `buildSceneSpec()`이 snapshot에서 인물, 상태, 행동 정보를 추려 장면 명세를 구성합니다.
-3. `generateImagePrompt()`가 장면 명세를 이미지에 필요한 인물·동작·배경 묘사로 바꿉니다.
-4. `generateSceneImage()`가 프롬프트로 이미지를 요청합니다.
-5. 응답의 이미지 데이터를 Data URL로 변환해 Scene 패널에 표시합니다.
+1. `exportCanvasSnapshot()` creates a snapshot of the current blocks and connections.
+2. `buildSceneSpec()` extracts character, state, and action information from the snapshot to build a scene specification.
+3. `generateImagePrompt()` turns that specification into descriptions of the characters, actions, and setting needed for an image.
+4. `generateSceneImage()` requests an image using the prompt.
+5. Convert the returned image data into a Data URL and display it in the Scene panel.
 
-SceneSpec에는 `entities`, `initial_state`, `actions`, `render_hint`를 담습니다. 화면 배치 좌표나 연결선 자체보다 **누가 등장하고, 어떤 상태이며, 어떤 행동을 정의했는지**를 이미지 요청에 전달하는 단계입니다. `initial_state`에는 Object의 상태를 나타내는 State 블록(slot 모드) 중 소유자가 지정된 블록의 현재 값을 정리합니다. 조건과 결과는 Action에 저장된 내용을 사용합니다.
+SceneSpec contains `entities`, `initial_state`, `actions`, and `render_hint`. It passes **who is present, their states, and the actions defined for them** to the image request, rather than the canvas coordinates or connection lines. `initial_state` collects the current values of State blocks in slot mode that have an assigned owner. Conditions and effects come from the data stored in each Action.
 
-관련 코드: [snapshot 변환](src/api/exportCanvasSnapshot.js), [SceneSpec 구성](src/api/sceneSpec.js), [시각화 요청 연결](src/components/BlockCanvas.js)
+Related code: [Snapshot export](src/api/exportCanvasSnapshot.js), [SceneSpec construction](src/api/sceneSpec.js), [Visualization flow](src/components/BlockCanvas.js)
 
-## 기술 선택과 구현
+## Technical Decisions and Implementation
 
-### 1. 자연어 입력을 편집 가능한 초안으로: Gemini와 JSON 응답
+### 1. Natural Language as an Editable Draft: Gemini and JSON Responses
 
-이야기의 인물과 사물을 자유롭게 설명하면서도, 편집기에서는 이름·속성·소유 관계처럼 정해진 필드를 다룰 수 있어야 했습니다. 이를 위해 **자연어 설명을 타입별 JSON 초안으로 받는 방식**을 사용했습니다.
+Users need freedom to describe story characters and objects, while the editor needs structured fields such as names, properties, and ownership. The solution is to receive **type-specific JSON drafts from natural-language descriptions**.
 
-요청에는 선택한 타입과 필요한 필드 형식을 포함하고, Gemini의 응답 MIME 타입을 `application/json`으로 지정합니다. Object에는 초기 상태가 하나 이상 포함되도록 요청합니다. 반환된 묶음은 Object와 State로 나누어 각각 식별자를 붙인 뒤 Assets에 추가합니다. 다른 타입은 단일 요소로 처리합니다.
+Each request includes the selected type and required field structure, with Gemini's response MIME type set to `application/json`. Object requests ask for at least one initial State. The returned bundle is split into an Object and States, each receives an identifier, and the elements are added to Assets. Other types are handled as single elements.
 
-생성 결과는 **사용자가 수정할 데이터의 초안**으로 다룹니다. `FileGenerator`가 요청·로딩·오류 표시와 결과 추가를 맡고, 이후의 확인과 수정은 편집 화면에서 이루어집니다. 응답 파싱 실패와 API 연결 실패도 구분해 반환합니다.
+Generated content is treated as **draft data for the user to edit**. `FileGenerator` handles the request, loading and error indicators, and adding results. Users then review and revise those results in the editor. Response-parsing failures and API connection failures are reported separately.
 
-관련 코드: [타입별 프롬프트와 JSON 처리](src/api/llmApi.js), [생성 창과 결과 처리](src/components/FileGenerator.js)
+Related code: [Type-specific prompts and JSON handling](src/api/llmApi.js), [Generation dialog and result handling](src/components/FileGenerator.js)
 
-### 2. 연결의 의미가 드러나는 편집기: React, SVG, 타입별 포트
+### 2. Making Connections Meaningful: React, SVG, and Typed Ports
 
-인물과 상태를 연결하는 것과 인물을 행동에 연결하는 것은 의미가 다릅니다. 전자는 상태의 소유자를 정하고, 후자는 행동의 Actor 또는 Target을 정합니다. 이 차이를 화면에서 다루기 위해 Object·State·Action·Condition별 블록과 포트를 직접 구성했습니다.
+Connecting a character to a State establishes ownership; connecting it to an Action assigns an Actor or Target. Custom blocks and ports for Object, State, Action, and Condition make these different relationships explicit in the interface.
 
-React에서는 캔버스의 블록과 연결 목록을 상태로 관리합니다. 블록 카드에는 타입에 필요한 입력과 연결 지점을 표시하고, SVG 선은 블록 사이의 관계를 보여줍니다. 블록 이동과 캔버스 패닝도 이 좌표·상태를 바탕으로 처리합니다.
+React state holds the canvas blocks and connections. Each block card displays the inputs and ports required by its type, while SVG lines show relationships between blocks. Block dragging and canvas panning use the same coordinate and state model.
 
-연결 요청은 `isAllowedConnection()`에서 출발·도착 블록과 포트의 조합을 검사합니다. 다음 네 가지 연결에서는 관계에 맞는 데이터를 갱신합니다.
+`isAllowedConnection()` checks the combination of source and destination blocks and ports. These four connection types update the corresponding data:
 
-- **Object → State:** State의 소유자 지정
-- **Object → Action:** Actor 또는 Target 참조 지정
-- **Object의 State → Condition:** 비교할 대상과 속성 지정
-- **Condition → Action:** 연결할 때 조건식의 내용을 행동의 조건 목록에 추가
+- **Object → State:** Assign the State's owner
+- **Object → Action:** Assign the Actor or Target reference
+- **Object's State → Condition:** Specify the object and property to compare
+- **Condition → Action:** Add a copy of the condition expression to the Action's conditions when connected
 
-Condition → Action 연결은 연결 시점의 조건식을 Action에 복사하는 방식입니다. 이후 행동에 적용할 조건은 Action 편집창에서 확인하고 수정합니다.
+A Condition → Action connection copies the expression into the Action at the time of connection. The conditions applied to the Action can then be reviewed and edited in the Action editor.
 
-`actor`와 `target`은 조건·결과에서 각각 Action의 주체와 대상을 가리키는 역할 참조입니다.
+Within conditions and effects, `actor` and `target` are role references to the Action's Actor and Target.
 
-관련 코드: [연결 가능 조합](src/components/blocks/blockGraph.js), [연결에 따른 데이터 갱신](src/components/BlockCanvas.js), [타입별 블록 내용](src/components/blocks/BlockContents.js)
+Related code: [Allowed connections](src/components/blocks/blockGraph.js), [Connection-driven data updates](src/components/BlockCanvas.js), [Type-specific block content](src/components/blocks/BlockContents.js)
 
-### 3. 편집한 규칙의 맥락을 이미지로: SceneSpec과 두 단계 생성
+### 3. Visualizing the Context of Edited Rules: SceneSpec and Two-Stage Generation
 
-캔버스에는 위치·식별자·포트와 같은 편집 정보와, 인물·상태·행동처럼 이야기의 내용이 함께 존재합니다. 이미지 요청에서는 이야기의 내용을 전달할 수 있도록 중간 표현인 **SceneSpec**을 두었습니다.
+The canvas holds both editing metadata, such as positions, identifiers, and ports, and story content, such as characters, states, and actions. **SceneSpec** is an intermediate representation that carries the story content into image generation.
 
-[시각화 경로](#장면-시각화-경로)에서 snapshot을 SceneSpec으로 변환하면서 Object·State 식별자를 이름으로 풀고, 행동의 조건과 결과를 문자열로 정리합니다.
+In the [scene visualization flow](#scene-visualization), converting a snapshot to SceneSpec resolves Object and State identifiers to names and formats action conditions and effects as strings.
 
-| 편집 데이터 | 장면 명세에서의 표현 |
+| Editor Data | Representation in the Scene Specification |
 | --- | --- |
-| Object의 식별자 | 등장인물의 이름과 ID |
-| 소유자가 지정된 State와 현재 값 | `백설공주.사과 소지`, `true` |
-| Action의 Actor·Target 참조 | `백설공주`, `곰` |
-| Effect의 상태 참조와 대입 값 | `actor.사과 소지 set false` |
+| Object identifier | Character name and ID |
+| State with an assigned owner and current value | `Snow White.Has Apple`, `true` |
+| Action's Actor and Target references | `Snow White`, `bear` |
+| Effect's state reference and assigned value | `actor.Has Apple set false` |
 
-이 장면 명세를 바탕으로 텍스트 모델이 인물의 모습·동작·환경을 담은 이미지 프롬프트를 만들고, 이미지 모델이 장면을 생성합니다. 편집 데이터 정리, 시각적 묘사 생성, 이미지 생성을 나누어 연결한 구조입니다. 사용자가 규칙을 바꾸면 현재 캔버스를 다시 읽어 같은 과정을 요청합니다.
+A text model uses the specification to create an image prompt describing the characters' appearance, actions, and surroundings. An image model then generates the scene. The flow separates editor-data summarization, visual description, and image generation. When users change rules, another visualization request reads the current canvas and repeats the process.
 
-이미지 생성 중에는 중복 요청을 막고, 응답 이미지를 Scene에 반영합니다. 요청에 실패하면 오류를 표시하고 로딩 상태를 해제합니다.
+During image generation, duplicate requests are blocked and the returned image is displayed in Scene. If a request fails, the app displays an error and clears the loading state.
 
-관련 코드: [SceneSpec](src/api/sceneSpec.js), [이미지 프롬프트](src/api/llmApi.js), [이미지 응답 처리](src/api/nanobanana.js), [Scene 표시](src/components/Scene.js)
+Related code: [SceneSpec](src/api/sceneSpec.js), [Image prompts](src/api/llmApi.js), [Image response handling](src/api/nanobanana.js), [Scene display](src/components/Scene.js)
 
-## 구현 내용
+## Implemented Features
 
-- 이야기 요소의 생성·조회, Object·State·Action·Goal 편집과 Assets에서 캔버스로 가져오는 흐름
-- 타입별 블록 배치·이동·삭제, 포트 연결, 상태 및 행동 규칙 편집
-- 현재 캔버스를 SceneSpec으로 정리해 이미지 생성을 요청하고 Scene에 표시하는 흐름
-- 기본 이야기 예시와 생성·시각화 요청의 로딩 및 오류 처리
+- Story element generation and browsing, Object/State/Action/Goal editing, and dragging elements from Assets onto the canvas
+- Type-specific block placement, movement, and deletion; port connections; and editing of states and action rules
+- Conversion of the current canvas into SceneSpec, image-generation requests, and display of the result in Scene
+- Built-in story examples, with loading and error handling for generation and visualization requests
 
-## 개발 환경과 실행
+## Development Setup
 
-### 사용 기술
+### Technologies
 
-| 구분 | 기술 | 사용 위치 |
+| Area | Technology | Used For |
 | --- | --- | --- |
-| UI | React 19, JavaScript, CSS | Assets, 생성·편집창, 블록 캔버스, Scene |
-| 관계 표시 | SVG | 블록 사이의 연결선 |
-| AI 연동 | `@google/genai` | 이야기 요소·프롬프트·이미지 생성 요청 |
-| 텍스트 생성 | `gemini-2.0-flash` | JSON 요소 생성, 이미지 프롬프트 생성 |
-| 이미지 생성 | `gemini-2.5-flash-image` | 장면 이미지 생성 |
-| 개발·빌드 | Create React App, `react-scripts` | 개발 서버, 빌드, 테스트 스크립트 |
+| UI | React 19, JavaScript, CSS | Assets, generation and editing dialogs, Block Canvas, and Scene |
+| Relationship display | SVG | Connection lines between blocks |
+| AI integration | `@google/genai` | Requests for story elements, prompts, and images |
+| Text generation | `gemini-2.0-flash` | JSON element generation and image-prompt generation |
+| Image generation | `gemini-2.5-flash-image` | Scene image generation |
+| Development and build | Create React App, `react-scripts` | Development server, build, and test scripts |
 
-### 로컬 실행
+### Run Locally
 
-Node.js와 npm을 설치한 뒤 다음 명령으로 개발 서버를 실행합니다.
+Install Node.js and npm, then start the development server:
 
 ```bash
 git clone https://github.com/hemaher0/interactive-story-maker.git
@@ -198,43 +198,43 @@ npm ci
 npm start
 ```
 
-개발 서버가 시작되면 [http://localhost:3000](http://localhost:3000)에서 확인합니다. 처음에는 기본 예시가 Assets에 표시됩니다.
+Once the server starts, open [http://localhost:3000](http://localhost:3000). Assets initially contains the built-in examples.
 
-1. Assets에서 필요한 인물·상태·행동을 캔버스로 끌어 놓습니다.
-2. 인물의 상태와 Action의 Actor·Target을 지정하고, 조건과 결과를 편집합니다.
-3. 요소를 더 만들려면 Assets의 `+`를 눌러 타입과 설명을 입력합니다.
-4. 그림을 요청하려면 **Visualize Scene**을 누릅니다.
+1. Drag the characters, states, and actions you need from Assets onto the canvas.
+2. Assign the characters' states and each Action's Actor and Target, then edit the conditions and effects.
+3. To create more elements, click `+` in Assets and enter a type and description.
+4. Click **Visualize Scene** to request an image.
 
-### API 설정
+### API Configuration
 
-AI 요소·이미지 생성에는 Gemini API 키와 위 모델에 대한 접근 권한이 필요합니다. 로컬에서 생성 기능을 실험할 때는 `src/api/llmApi.js`와 `src/api/nanobanana.js`의 `MY_API` 자리에 키를 설정합니다.
+AI element and image generation require a Gemini API key with access to the models listed above. To experiment with generation locally, set the key in the `MY_API` placeholders in `src/api/llmApi.js` and `src/api/nanobanana.js`.
 
-브라우저에서 Gemini SDK를 직접 호출하는 구조이므로, 키를 설정한 소스는 로컬에서 관리합니다. 공개 배포 시에는 키가 클라이언트에 노출되지 않도록 API 호출과 키 관리를 서버에서 처리해야 합니다.
+The app calls the Gemini SDK directly from the browser, so keep any source containing a key local. For a public deployment, move API calls and key management to a server so the key is not exposed in the client.
 
-### 스크립트
+### Scripts
 
-| 명령 | 용도 |
+| Command | Purpose |
 | --- | --- |
-| `npm start` | 개발 서버 실행 |
-| `npm run build` | `build/`에 배포용 정적 파일 생성 |
+| `npm start` | Start the development server |
+| `npm run build` | Create a static production build in `build/` |
 
-## 코드 구조
+## Code Structure
 
 ```text
 src/
-├── App.js                         # Assets·Scene 상태와 전체 화면 구성
-├── data/initialData.js             # 예시 Object·State·Action·Condition·Goal
+├── App.js                         # Assets and Scene state; overall layout
+├── data/initialData.js             # Example Objects, States, Actions, Conditions, and Goals
 ├── components/
-│   ├── Hierarchy.js               # Assets 목록, 생성·편집 진입점
-│   ├── FileGenerator.js           # 타입과 설명 입력, AI 생성 결과 처리
-│   ├── ComponentEditor.js         # 요소 속성 및 Action 조건·결과 편집
-│   ├── BlockCanvas.js             # 블록 배치·연결·시각화 요청
-│   ├── blocks/                    # 블록 카드, 포트, 연결 규칙, 값 표현
-│   ├── hooks/useBlockDragger.js    # 블록 이동
-│   └── Scene.js                   # 생성한 장면 이미지 표시
+│   ├── Hierarchy.js               # Assets list and entry points for generation and editing
+│   ├── FileGenerator.js           # Type and description input; AI result handling
+│   ├── ComponentEditor.js         # Element properties; Action conditions and effects
+│   ├── BlockCanvas.js             # Block placement, connections, and visualization requests
+│   ├── blocks/                    # Block cards, ports, connection rules, and value display
+│   ├── hooks/useBlockDragger.js    # Block dragging
+│   └── Scene.js                   # Generated scene image display
 └── api/
-    ├── llmApi.js                  # 이야기 요소·이미지 프롬프트 생성
-    ├── exportCanvasSnapshot.js    # 캔버스 snapshot 생성
-    ├── sceneSpec.js               # 이야기 내용을 장면 명세로 요약
-    └── nanobanana.js              # 장면 이미지 요청 및 응답 처리
+    ├── llmApi.js                  # Story element and image-prompt generation
+    ├── exportCanvasSnapshot.js    # Canvas snapshot export
+    ├── sceneSpec.js               # Story data summarized as a scene specification
+    └── nanobanana.js              # Scene image requests and response handling
 ```
